@@ -1,0 +1,32 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/02/Neg16.hdl
+
+/**
+ * Neg16 gate:
+ * If n then out[i] = !in[i] else out[i] = in[i]
+ */
+
+CHIP Neg16 {
+    IN in[16], n;
+    OUT out[16];
+
+    PARTS:
+    Xor(a=n, b=in[0], out=out[0]);
+    Xor(a=n, b=in[1], out=out[1]);
+    Xor(a=n, b=in[2], out=out[2]);
+    Xor(a=n, b=in[3], out=out[3]);
+    Xor(a=n, b=in[4], out=out[4]);
+    Xor(a=n, b=in[5], out=out[5]);
+    Xor(a=n, b=in[6], out=out[6]);
+    Xor(a=n, b=in[7], out=out[7]);
+    Xor(a=n, b=in[8], out=out[8]);
+    Xor(a=n, b=in[9], out=out[9]);
+    Xor(a=n, b=in[10], out=out[10]);
+    Xor(a=n, b=in[11], out=out[11]);
+    Xor(a=n, b=in[12], out=out[12]);
+    Xor(a=n, b=in[13], out=out[13]);
+    Xor(a=n, b=in[14], out=out[14]);
+    Xor(a=n, b=in[15], out=out[15]);
+}

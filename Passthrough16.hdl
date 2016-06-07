@@ -1,0 +1,17 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/02/Passthrough16.hdl
+
+/**
+ * Passthrough16 gate:
+ * out[16] = in[16]
+ */
+
+CHIP Passthrough16 {
+    IN in[16];
+    OUT out[16];
+
+    PARTS:
+    And16(a=in, b=in, out=out);
+}

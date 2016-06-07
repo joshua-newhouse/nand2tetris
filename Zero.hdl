@@ -1,0 +1,18 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/02/Zero.hdl
+
+/**
+ * Zero gate:
+ * If z then out = 0 else out = in
+ */
+
+CHIP Zero {
+    IN in, z;
+    OUT out;
+
+    PARTS:
+    Not(in=z, out=notz);
+    And(a=notz, b=in, out=out);
+}

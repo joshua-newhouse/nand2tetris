@@ -1,0 +1,32 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/02/Zero16.hdl
+
+/**
+ * Zero16 gate:
+ * If z then out[i] = 0 else out[i] = in[i]
+ */
+
+CHIP Zero16 {
+    IN in[16], z;
+    OUT out[16];
+
+    PARTS:
+    Zero(in=in[0], z=z, out=out[0]);
+    Zero(in=in[1], z=z, out=out[1]);
+    Zero(in=in[2], z=z, out=out[2]);
+    Zero(in=in[3], z=z, out=out[3]);
+    Zero(in=in[4], z=z, out=out[4]);
+    Zero(in=in[5], z=z, out=out[5]);
+    Zero(in=in[6], z=z, out=out[6]);
+    Zero(in=in[7], z=z, out=out[7]);
+    Zero(in=in[8], z=z, out=out[8]);
+    Zero(in=in[9], z=z, out=out[9]);
+    Zero(in=in[10], z=z, out=out[10]);
+    Zero(in=in[11], z=z, out=out[11]);
+    Zero(in=in[12], z=z, out=out[12]);
+    Zero(in=in[13], z=z, out=out[13]);
+    Zero(in=in[14], z=z, out=out[14]);
+    Zero(in=in[15], z=z, out=out[15]);
+}

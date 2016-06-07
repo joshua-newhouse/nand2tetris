@@ -1,0 +1,64 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/And16.hdl
+
+/**
+ * 16-bit splitter:
+ * 
+ */
+
+CHIP Split16 {
+    IN in;
+    OUT out[16];
+
+    PARTS:
+    Not(in=in, out=out0);
+    Not(in=out0, out=out[0]);
+    
+    Not(in=in, out=out1);
+    Not(in=out1, out=out[1]);
+
+    Not(in=in, out=out2);
+    Not(in=out2, out=out[2]);
+
+    Not(in=in, out=out3);
+    Not(in=out3, out=out[3]);
+
+    Not(in=in, out=out4);
+    Not(in=out4, out=out[4]);
+
+    Not(in=in, out=out5);
+    Not(in=out5, out=out[5]);
+
+    Not(in=in, out=out6);
+    Not(in=out6, out=out[6]);
+
+    Not(in=in, out=out7);
+    Not(in=out7, out=out[7]);
+
+    Not(in=in, out=out8);
+    Not(in=out8, out=out[8]);
+
+    Not(in=in, out=out9);
+    Not(in=out9, out=out[9]);
+
+    Not(in=in, out=out10);
+    Not(in=out10, out=out[10]);
+    
+    Not(in=in, out=out11);
+    Not(in=out11, out=out[11]);
+
+    Not(in=in, out=out12);
+    Not(in=out12, out=out[12]);
+
+    Not(in=in, out=out13);
+    Not(in=out13, out=out[13]);
+
+    Not(in=in, out=out14);
+    Not(in=out14, out=out[14]);
+
+    Not(in=in, out=out15);
+    Not(in=out15, out=out[15]);
+
+}

@@ -1,0 +1,17 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/02/IsNeg16.hdl
+
+/**
+ * IsNeg16 gate:
+ * If 16 bit input is negative out = 1 else out = 0
+ */
+
+CHIP IsNeg16 {
+    IN in[16];
+    OUT out;
+
+    PARTS:
+    And(a=in[15], b=in[15], out=out);
+}

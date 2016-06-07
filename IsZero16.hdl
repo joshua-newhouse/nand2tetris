@@ -1,0 +1,19 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/02/IsZero16.hdl
+
+/**
+ * IsZero16 gate:
+ * If 16 bit input equals 0 out = 1 else out = 0
+ */
+
+CHIP IsZero16 {
+    IN in[16];
+    OUT out;
+
+    PARTS:
+    Or8Way(in=in[0..7], out=zout1);
+    Or8Way(in=in[8..15], out=zout2);
+    Nor(a=zout1, b=zout2, out=out);
+}
