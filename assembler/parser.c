@@ -3,12 +3,13 @@
 #include "assembler.h"
 
 extern int nLine;
+int nextIAddr = 0;
 char *GetSymbol(char *s, int type);
 void CleanStrEnd(char *s);
 
 /* Parse:  parses the current input line from the source file setting the
 		fields of the cmd structure with the proper values */
-void Parse(char *s, CMD *cmd){
+void Parse(char *s, CMD *cmd, enum pass c){
 
 	while(isspace(*s++))	/* skips leading white space */
 		;
@@ -22,47 +23,71 @@ void Parse(char *s, CMD *cmd){
 		break;
 	case '@':		/* sets A command and captures integer value or symbol */
 		cmd->commandType = A_COMMAND;
-		if(isdigit(*++s)){
-			int i = 0;
-			for(i = 0; *(s+i); i++)
-				if(!isdigit(*(s+i))){
-					printf("Error:  invalid symbol name %s on line %d\n", s, nLine);
-					exit(1);
-				}
-			cmd->value = atoi(s);
-		} else{
-			cmd->symbol = GetSymbol(s, cmd->commandType);
+		switch(c){
+		case FIRST:
+			cmd->symbol = GetSymbol(++s, cmd->commandType);
+			if(addEntry(cmd) == 0){
+					printf("Error:  cannot add symbol %s on line %d\n", cmd->symbol, nLine);
+					exit(11);
+			}
+			nextIAddr++;
+			break;			
+		case SECOND:
+			if(isdigit(*++s)){
+				int i = 0;
+				for(i = 0; *(s+i); i++)
+					if(!isdigit(*(s+i))){
+						printf("Error:  invalid symbol name %s on line %d\n", s, nLine);
+						exit(1);
+					}
+				cmd->value = atoi(s);
+			} else{
+				cmd->symbol = GetSymbol(s, cmd->commandType);
+				cmd->value = getAddr(cmd->symbol);
+			}
+			break;
 		}
 		break;
 	case 'A': case 'D': case 'M': case '0':
 	case '1': case '-': case '!':	/* sets C command and captures command destination, computation, and jump */
-		cmd->commandType = C_COMMAND;
-		char *sp = s;
-		while(*s)
-			switch(*s){
-			case '=':
-				*s = '\0';
-				cmd->dest = sp;
-				cmd->comp = ++s;
-				break;
-			case ';':
-				*s = '\0';
-				if(cmd->comp == NULL)
-					cmd->comp = sp;
-				if(*++s == 'J')
-					cmd->jump = s;
-				else if(*s){
-					printf("Error:  unrecognized jump command \"%s\b\" on line %d\n", s, nLine);
-					exit(2);
+		if(c == SECOND){
+			cmd->commandType = C_COMMAND;
+			char *sp = s;
+			while(*s)
+				switch(*s){
+				case '=':
+					*s = '\0';
+					cmd->dest = sp;
+					cmd->comp = ++s;
+					break;
+				case ';':
+					*s = '\0';
+					if(cmd->comp == NULL)
+						cmd->comp = sp;
+					if(*++s == 'J')
+						cmd->jump = s;
+					else if(*s){
+						printf("Error:  unrecognized jump command \"%s\b\" on line %d\n", s, nLine);
+						exit(2);
+					}
+					break;
+				default:
+					s++;
 				}
-				break;
-			default:
-				s++;
-			}
+		}
+		nextIAddr++;
 		break;
-	case '(':		/* sets L command and captures symbol */
+	case '(':		/* sets L command */
 		cmd->commandType = L_COMMAND;
-		cmd->symbol = GetSymbol(++s, cmd->commandType);
+		if(c == FIRST){
+			cmd->symbol = GetSymbol(++s, cmd->commandType);
+			if(addEntry(cmd))
+				break;
+			else{
+				printf("Error:  could not add %s to symbol table on line %d\n", cmd->symbol, nLine);
+				exit(4);
+			}
+		}
 		break;
 	case '/':		/* skips comments */
 		if(*(s+1) == '/'){
