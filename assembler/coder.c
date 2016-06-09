@@ -15,7 +15,7 @@ char *Code(CMD *cmd, char binStr[]){
 	case A_COMMAND:
 		binStr[0] = '0';
 		if(cmd->symbol)
-			strcpy(binStr+1, "111111111111111");
+			strcpy(binStr+1, ItoB(cmd->value, binStr+1, 2, 15));
 		else if(cmd->value < 32768 && cmd->value >= 0)
 			strcpy(binStr+1, ItoB(cmd->value, binStr+1, 2, 15));
 		else{

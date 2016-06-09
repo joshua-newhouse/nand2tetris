@@ -17,13 +17,22 @@ int main(int argc, char *argv[]){
 	OpenFiles(&fp_source, &fp_dest, argv);
 	while(fgets(line, MAXLINE, fp_source)){
 		nLine++;
-		Parse(line, &command);
+		Parse(line, &command, FIRST);
+		CMDreset(&command);
+	};
+	rewind(fp_source);
+	nLine = 0;
+	CMDreset(&command);
+	while(fgets(line, MAXLINE, fp_source)){
+		nLine++;
+		Parse(line, &command, SECOND);
 		if(command.commandType == A_COMMAND || command.commandType == C_COMMAND){
 			fputs(Code(&command, binStr), fp_dest);
 		}
 		CMDreset(&command);
 	};
 	
+	clearSymTab();
 	fclose(fp_source);
 	fclose(fp_dest);
 	return 0;
@@ -43,14 +52,15 @@ void OpenFiles(FILE **fp_s, FILE **fp_d, char *argv[]){
 	char dName[100] = "./";
 	if(argv[2])
 		strcat(dName, argv[2]);
-	else
-		strcat(dName, "a.hack");
-	
+	else{		
+		strcat(dName, argv[1]);
+		char *c = strstr(dName, "asm");
+		strcpy(c, "hack");
+	}	
 	if(!(*fp_s = fopen(sName, "r"))){
 		printf("Error:  source file could not be opened.  Check file name and ensure file exists in the current dir.\n");
 		exit(12);
-	}
-	
+	}	
 	if(!(*fp_d = fopen(dName, "w"))){
 		printf("Error:  destination file could not be opened.\n");
 		exit(13);
