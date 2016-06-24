@@ -50,7 +50,7 @@ extern int nLine;
 
 int sp = 0;	/* Used to keep track of VM's stack pointer */
 
-/* Keeps track of the number equality conditions */
+/* Keeps track of the number of equality conditions */
 int eqCond = 0;
 int gtCond = 0;
 int ltCond = 0;
@@ -218,7 +218,7 @@ void WriteArithmetic(Parser_command *cmd, char *out){
 	}
 }
 
-/* MemSeg:  returns the memory segment stored in command argument 1 */
+/* MemSeg:  returns the memory segment or arithmetic op stored in command argument 1 */
 int Type(Parser_command *cmd, enum type t){
 	int i;
 	for(i = 0; t ? arithTab[i] : memSegTab[i]; i++)
