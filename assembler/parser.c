@@ -25,7 +25,11 @@ void Parse(char *s, CMD *cmd, enum pass c){
 		cmd->commandType = A_COMMAND;
 		switch(c){
 		case FIRST:
-			cmd->symbol = GetSymbol(++s, cmd->commandType);
+			if(isdigit(*++s)){
+				nextIAddr++;
+				break;
+			}
+			cmd->symbol = GetSymbol(s, cmd->commandType);
 			if(addEntry(cmd) == 0){
 					printf("Error:  cannot add symbol %s on line %d\n", cmd->symbol, nLine);
 					exit(11);
@@ -102,6 +106,10 @@ void Parse(char *s, CMD *cmd, enum pass c){
 
 /* GetSymbol:  captures symbol for both A and L commands */
 char *GetSymbol(char *s, int type){
+	if(isdigit(*s)){
+		printf("Error: bad label name %s on line %d\n", s, nLine);
+		exit(5);
+	}
 	int paren = 0;	
 	if(type)
 		paren = ')';
