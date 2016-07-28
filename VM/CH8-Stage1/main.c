@@ -5,6 +5,8 @@
 
 #define MAXLINE 1000
 
+#define DEBUG(expr) printf("Line " #expr "\n")
+
 int main(int argc, char *argv[]){
 	if(argc != 2){
 		printf("Error:  usage \"VM.bin <source.vm>\" or \"VM.bin <dir>\" where <dir> contains .vm files.\n");

@@ -11,10 +11,9 @@
 #define skipWhiteSpace(s) {while((*s == ' ' || *s == '\t' || *s == '\0') && strPos--) s++;}
 
 /* markStrEnd:  puts '\0' at the end of each word in the string s */
-#define markStrEnd(s)  {int i = 0; \
-			while(*(s+i) != ' ' && *(s+i) != '\t' && *(s+i) != '\n' && *(s+i) != '\0'){\
-				i++; \
-			}\
+#define markStrEnd(s)  {int i = 0;\
+			while(!isspace(*(s+i)) && *(s+i))\
+				i++;\
 			*(s+i) = '\0';}
 
 /* moveToNextString:  moves sting pointer s to the next word in string s */
@@ -25,18 +24,19 @@
 #define errCMD(string, n, file, e) {printf("Error:  unknown command %s on line %d in <%s>\n", string, n, file);	\
 			     exit(e);}
 
-int isArith(char *s);
-int isInteger(char *s);
+int isArith(char* s);
+int isInteger(char* s);
+int isGoodLabel(char* s);
 
 /* Parser_Constructor:  initializes Parser_command structure to 0 */
-void Parser_Constructor(Parser_command *cmd){
+void Parser_Constructor(Parser_command* cmd){
 	cmd->commandType = 0;
 	cmd->arg1 = NULL;
 	cmd->arg2 = NULL;
 }
 
 /* Parser_advance: parses the current line and stores the info in the Parser_command structure */
-int Parser_advance(char *s, Parser_command *cmd, FH_FileStruct inFile){
+int Parser_advance(char* s, Parser_command* cmd, FH_FileStruct inFile){
 	int strPos = strlen(s);
 	while(strPos > 0){
 		switch(*s){
@@ -76,6 +76,16 @@ int Parser_advance(char *s, Parser_command *cmd, FH_FileStruct inFile){
 					break;
 				}
 			}
+			int l, g;
+			if((l = strcmp(s, "label") == 0) || (g = strcmp(s,"goto") == 0) || strcmp(s,"if-goto") == 0){
+				cmd->commandType = l ? C_LABEL : (g ? C_GOTO : C_IF);
+				moveToNextStr(s);
+				markStrEnd(s);
+				cmd->arg1 = s;
+				if(!isGoodLabel(s))
+					errCMD(cmd->arg1, inFile.nLine, inFile.fileName, 300);
+				return 1;
+			}
 			if(!(cmd->commandType == C_PUSH || cmd->commandType == C_POP || cmd->commandType == C_RETURN)){
 				if((i = isArith(s)) && !cmd->arg1){	/* C_ARITHMETIC and assigns operation to arg 1 */
 					cmd->commandType = C_ARITHMETIC;
@@ -101,7 +111,7 @@ int Parser_advance(char *s, Parser_command *cmd, FH_FileStruct inFile){
 }
 
 /* isArith:  returns index plus 1 if s is an arithmetic command found in arithTab, 0 otherwise */
-int isArith(char *s){
+int isArith(char* s){
 	int i;
 	for(i = 0; arithTab[i]; i++){
 		if(!strcmp(s, arithTab[i]))
@@ -111,7 +121,7 @@ int isArith(char *s){
 }
 
 /* isInterger:  returns 1 if string s is a base 10 or less integer; 0 otherwise */
-int isInteger(char *s){
+int isInteger(char* s){
 	while(*s)
 		if(*s >= '0' && *s <= '9'){
 			s++;
@@ -119,5 +129,19 @@ int isInteger(char *s){
 		else{
 			return 0;
 		}
+	return 1;
+}
+
+/* isGoodLabel:  returns 1 if string s meets label guidlines; returns 0 otherwise */
+int isGoodLabel(char* s){
+	int i;
+	for(i = 0; *s; i++, s++){
+		if(!i && isdigit(*s))
+			return 0;
+		else if(isalnum(*s) || *s == '.' || *s == '_' || *s == '$' || *s == ':')
+			printf("%c", *s);
+		else
+			return 0;
+	}
 	return 1;
 }
